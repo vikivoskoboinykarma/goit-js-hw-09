@@ -1,4 +1,3 @@
-
 const startBtn = document.querySelector('[data-start]');
 const stopBtn = document.querySelector('[data-stop]');
 
@@ -14,6 +13,7 @@ function changeBodyColor() {
 
 function startColorSwitcher() {
   startBtn.disabled = true;
+  stopBtn.disabled = false;
 
   intervalId = setInterval(() => {
     changeBodyColor();
@@ -22,6 +22,7 @@ function startColorSwitcher() {
 
 function stopColorSwitcher() {
   startBtn.disabled = false;
+  stopBtn.disabled = true;
 
   clearInterval(intervalId);
 }

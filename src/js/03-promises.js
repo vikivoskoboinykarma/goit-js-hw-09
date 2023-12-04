@@ -1,8 +1,7 @@
 import Notiflix from 'notiflix';
 
-const form = document.querySelector('form.form');
-
-form.addEventListener('submit', onCreatePromiseClick);
+const form = document.querySelector('.form');
+form.addEventListener('submit', makePromiseSubmit);
 
 function createPromise(position, delay) {
   return new Promise((resolve, reject) => {
@@ -17,28 +16,27 @@ function createPromise(position, delay) {
   });
 }
 
-function onCreatePromiseClick(event) {
+function makePromiseSubmit(event) {
   event.preventDefault();
   const { delay, step, amount } = event.currentTarget.elements;
-  let inputDelay = Number(delay.value);
-  let inputStep = Number(step.value);
-  let inputAmount = Number(amount.value);
+  let infoDelay = Number(delay.value);
+  let infoStep = Number(step.value);
+  let infoAmount = Number(amount.value);
 
-  function createNextPromise(i) {
-    if (i <= inputAmount) {
-      createPromise(i, inputDelay)
-        .then(({ position, delay }) => {
-          Notiflix.Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
-          inputDelay += inputStep;
-          createNextPromise(i + 1);
-        })
-        .catch(({ position, delay }) => {
-          Notiflix.Notify.failure(`Rejected promise ${position} in ${delay}ms`);
-          inputDelay += inputStep;
-          createNextPromise(i + 1);
-        });
-    }
+  for (let i = 1; i <= infoAmount; i += 1) {
+    createPromise(i, infoDelay)
+      .then(({ position, delay }) => {
+        Notiflix.Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
+      })
+      .catch(({ position, delay }) => {
+        Notiflix.Notify.warning(`Rejected promise ${position} in ${delay}ms`);
+      });
+
+    infoDelay += infoStep;
   }
 
-  createNextPromise(1);
+  // Очищення полів форми після натискання кнопки
+  delay.value = '';
+  step.value = '';
+  amount.value = '';
 }
